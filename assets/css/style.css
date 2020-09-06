@@ -1,0 +1,40 @@
+.navbar-brand{
+    font-size: 30px;
+}
+
+.searcharea {
+    background-color: #e6f2ff;
+    padding: 20px;
+}
+
+.uvindex {
+    padding: 5px;
+}
+
+.day {
+    box-sizing: border-box;
+    width: 20%;
+    margin: 5px;
+    padding: 5px;
+    
+}
+
+.day:first-child {
+    margin-left: 0px;
+}
+
+.day:last-child{
+    margin-right: 0px;
+}
+
+.forecast {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin: 10px 0px;
+}
+
+#searchbtn{
+    padding: 6px 5px 0px 5px;
+
+}

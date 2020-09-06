@@ -46,7 +46,24 @@ function error(){
     getCurrent(currentLocation);
 }
 
-
+function showPrevious() {
+    //show the previously searched for locations in local storage
+    if (savedLocations) {
+        $("#prevSearches").empty();
+        var btns = $("<div>").attr("class", "list-group");
+        for (var i = 0; i < savedLocations.length; i++) {
+            var locationBtn = $("<a>").attr("href", "#").attr("id", "loc-btn").text(savedLocations[i]);
+            if (savedLocations[i] == currentLocation){
+                locationBtn.attr("class", "list-group-item list-group-item-action active");
+            }
+            else {
+                locationBtn.attr("class", "list-group-item list-group-item-action");
+            }
+            btns.prepend(locationBtn);
+        }
+        $("#prevSearches").append(btns);
+    }
+}
 
 function getCurrent(city) {
     var queryURL = "https://api.openweathermap.org/data/2.5/weather?q=" + city + "&APPID=7e4c7478cc7ee1e11440bf55a8358ec3&units=imperial";
@@ -118,7 +135,49 @@ function getCurrent(city) {
         });
 
         cardRow.append(textDiv);
+        getForecast(response.id);
     });
+}
+
+function getForecast(city) {
+    //get 5 day forecast
+    var queryURL = "https://api.openweathermap.org/data/2.5/forecast?id=" + city + "&APPID=7e4c7478cc7ee1e11440bf55a8358ec3&units=imperial";
+    $.ajax({
+        url: queryURL,
+        method: "GET"
+    }).then(function (response) {
+        //add container div for forecast cards
+        var newrow = $("<div>").attr("class", "forecast");
+        $("#earthforecast").append(newrow);
+
+        //loop through array response to find the forecasts for 15:00
+        for (var i = 0; i < response.list.length; i++) {
+            if (response.list[i].dt_txt.indexOf("15:00:00") !== -1) {
+                var newCol = $("<div>").attr("class", "day");
+                newrow.append(newCol);
+
+                var newCard = $("<div>").attr("class", "card text-white bg-primary");
+                newCol.append(newCard);
+
+                var cardHead = $("<div>").attr("class", "card-header").text(moment(response.list[i].dt, "X").format("MMM Do"));
+                newCard.append(cardHead);
+
+                var cardImg = $("<img>").attr("class", "card-img-top").attr("src", "https://openweathermap.org/img/wn/" + response.list[i].weather[0].icon + "@2x.png");
+                newCard.append(cardImg);
+
+                var bodyDiv = $("<div>").attr("class", "card-body");
+                newCard.append(bodyDiv);
+
+                bodyDiv.append($("<p>").attr("class", "card-text").html("Temp: " + response.list[i].main.temp + " &#8457;"));
+                bodyDiv.append($("<p>").attr("class", "card-text").text("Humidity: " + response.list[i].main.humidity + "%"));
+            }
+        }
+    });
+}
+
+function clear() {
+    //clear weather
+    $("#earthforecast").empty();
 }
 
 function saveLoaction(location){
@@ -139,8 +198,10 @@ $("#searchbtn").on("click", function () {
     event.preventDefault();
     //grab the value of the input field
     var location = $("#searchinput").val().trim();
-    //if loc wasn't empty
+    //if location wasn't empty
     if (location !== "") {
+        //clear the previous forecast
+        clear();
         currentLocation = location;
         saveLoaction(location);
         //clear the search field value
@@ -151,6 +212,7 @@ $("#searchbtn").on("click", function () {
 });
 
 $(document).on("click", "#loc-btn", function () {
+    clear();
     currentLocation = $(this).text();
     showPrevious();
     getCurrent(currentLocation);
