@@ -6,15 +6,10 @@ A useful app to look up weather conditions in a city. Allows the user to look up
 2. In the center the current weather conditions will be displayed.  
 3. Conditions include:  
 ..* Icon of currrent conditions  
-..* emperature  
+..* Temperature  
 ..* Humidity  
 ..* Wind Speed  
-..* UV Index  
-  
-  -Green: favorable  
-  -Yellow: moderate  
-  -Orange: severe  
-  -Red: dangerous  
+..* UV Index (Green-Red)
 4. A 5 day forecast will display under curent conditions.  
 5. Search more cities to add them to your history or click any city in the history column to see it weather conditions.
 
